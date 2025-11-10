@@ -1,3 +1,10 @@
+/**
+ * Ocean Professional Theme Tokens and Utilities
+ * Colors: primary #2563EB, secondary/success #F59E0B, error #EF4444
+ * Background #f9fafb, Surface #ffffff, Text #111827
+ */
+
+/* Core color tokens */
 $primary: #2563EB;
 $secondary: #F59E0B;
 $success: #F59E0B;
@@ -6,22 +13,145 @@ $background: #f9fafb;
 $surface: #ffffff;
 $text: #111827;
 
-$radius-md: 10px;
-$radius-lg: 14px;
-
-$shadow-sm: 0 2px 8px rgba(17, 24, 39, 0.06);
-
-// RGB components for opacity utilities
+/* Derived RGB channels (for alpha utilities) */
 $primary-r: 37; $primary-g: 99; $primary-b: 235;
+$secondary-r: 245; $secondary-g: 158; $secondary-b: 11;
 $success-r: 245; $success-g: 158; $success-b: 11;
 $error-r: 239; $error-g: 68; $error-b: 68;
+$text-r: 17; $text-g: 24; $text-b: 39;
 
-// expose CSS variables if needed
+/* Radii */
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-pill: 999px;
+
+/* Shadows */
+$shadow-xs: 0 1px 2px rgba(17, 24, 39, 0.06);
+$shadow-sm: 0 2px 8px rgba(17, 24, 39, 0.06);
+$shadow-md: 0 6px 16px rgba(17, 24, 39, 0.08);
+$shadow-lg: 0 12px 24px rgba(17, 24, 39, 0.12);
+
+/* Gradient */
+$ocean-gradient: linear-gradient(
+  135deg,
+  rgba(rgb($primary-r, $primary-g, $primary-b), 0.10),
+  #f8fafc
+);
+
+/* CSS custom properties for runtime theming */
 :root {
   --color-primary: #{$primary};
   --color-secondary: #{$secondary};
+  --color-success: #{$success};
   --color-error: #{$error};
   --color-background: #{$background};
   --color-surface: #{$surface};
   --color-text: #{$text};
+
+  --radius-sm: #{$radius-sm};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-pill: #{$radius-pill};
+
+  --shadow-xs: #{$shadow-xs};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+
+  --gradient-ocean: #{$ocean-gradient};
 }
+
+/* Utility classes (lightweight, optional) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: $radius-md;
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease,
+    transform 120ms ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  &.primary {
+    background: $primary;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(rgb($primary-r, $primary-g, $primary-b), 0.25);
+
+    &:hover { filter: brightness(0.97); transform: translateY(-1px); }
+    &:active { transform: translateY(0); }
+  }
+
+  &.secondary {
+    background: $secondary;
+    color: #1f2937;
+    box-shadow: 0 4px 10px rgba(rgb($secondary-r, $secondary-g, $secondary-b), 0.25);
+
+    &:hover { filter: brightness(0.96); transform: translateY(-1px); }
+    &:active { transform: translateY(0); }
+  }
+
+  &.ghost {
+    background: transparent;
+    color: $primary;
+    border-color: rgba(rgb($primary-r, $primary-g, $primary-b), 0.4);
+
+    &:hover { background: rgba(rgb($primary-r, $primary-g, $primary-b), 0.08); }
+    &:active { background: rgba(rgb($primary-r, $primary-g, $primary-b), 0.12); }
+  }
+
+  &.danger {
+    background: $error;
+    color: #fff;
+
+    &:hover { filter: brightness(0.96); }
+  }
+}
+
+/* Surface utility */
+.surface {
+  background: $surface;
+  color: $text;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+}
+
+/* Rounded utilities */
+.rounded-sm { border-radius: $radius-sm; }
+.rounded-md { border-radius: $radius-md; }
+.rounded-lg { border-radius: $radius-lg; }
+.rounded-pill { border-radius: $radius-pill; }
+
+/* Shadow utilities */
+.shadow-xs { box-shadow: $shadow-xs; }
+.shadow-sm { box-shadow: $shadow-sm; }
+.shadow-md { box-shadow: $shadow-md; }
+.shadow-lg { box-shadow: $shadow-lg; }
+
+/* Expose SCSS variables to component styles (via @use as t;) */
+$theme: (
+  primary: $primary,
+  secondary: $secondary,
+  success: $success,
+  error: $error,
+  background: $background,
+  surface: $surface,
+  text: $text,
+  radius-sm: $radius-sm,
+  radius-md: $radius-md,
+  radius-lg: $radius-lg,
+  radius-pill: $radius-pill,
+  shadow-xs: $shadow-xs,
+  shadow-sm: $shadow-sm,
+  shadow-md: $shadow-md,
+  shadow-lg: $shadow-lg,
+  gradient: $ocean-gradient
+);

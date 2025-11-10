@@ -3,20 +3,64 @@
 /* CSS Reset-lite and base styles */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
+:root {
+  /* Mirror SCSS tokens into CSS variables for runtime theming */
+  --color-primary: #{t.$primary};
+  --color-secondary: #{t.$secondary};
+  --color-success: #{t.$success};
+  --color-error: #{t.$error};
+  --color-background: #{t.$background};
+  --color-surface: #{t.$surface};
+  --color-text: #{t.$text};
+}
+
 body {
   margin: 0;
-  background-color: t.$background;
+  background: t.$background;
   color: t.$text;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a { color: inherit; }
+/* Base typography */
+h1, h2, h3, h4, h5, h6 {
+  color: t.$text;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+p {
+  margin: 0 0 0.75rem 0;
+  color: #374151;
+}
+small { font-size: 0.875rem; color: #6b7280; }
+
+a {
+  color: t.$primary;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
 
 /* Utility classes */
 .container {
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Button + surface shortcuts from theme */
+.btn { @extend .btn; } /* allows using .btn base without variant */
+.btn.primary { @extend .btn, .primary; }
+.btn.secondary { @extend .btn, .secondary; }
+.btn.ghost { @extend .btn, .ghost; }
+.btn.danger { @extend .btn, .danger; }
+
+.surface { @extend .surface; }
+
+/* Global selection color to match theme */
+::selection {
+  background: rgba(37, 99, 235, 0.2);
 }
