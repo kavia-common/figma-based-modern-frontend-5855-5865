@@ -1,0 +1,190 @@
+@use '../../../styles/theme.scss' as t;
+
+/* Scoped replication of assets/login-page-497-140.css for pixel accuracy */
+
+.login-wrap {
+  /* Provide some responsive centering context if app width < 1920; the inner container remains fixed-size for fidelity */
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Screen container */
+#screen-login-page-497-140 {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden; /* prevent negative-top background layer bleed */
+  background-color: #ffffff; /* var(--style-1-background-color) */
+  font-family: Inter, sans-serif;
+}
+
+/* Z-index layering */
+.layer-0 { z-index: 1; }
+.layer-1 { z-index: 2; }
+
+/* Background rectangle placeholder */
+#rect-654-766 {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 2224px;
+  height: 1798px;
+  background-color: #d9d9d9; /* var(--color-d9d9d9) */
+}
+
+/* Frame 127 container (white card) */
+#frame-497-141 {
+  position: absolute;
+  left: 960px;
+  top: 200px;
+  width: 830px;
+  height: 591px;
+  background-color: #ffffff; /* var(--style-127-background-color) */
+  border-radius: 40px; /* var(--style-127-border-radius) */
+  box-shadow: t.$shadow-md;
+}
+
+/* Username label */
+#text-498-143 {
+  position: absolute;
+  left: 75px;
+  top: 188px;
+  width: 106px;
+  height: 32px;
+  font-family: "Abyssinica SIL", serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 31.828125px;
+  color: #254d73; /* var(--typo-92-color) */
+}
+
+/* Password label */
+#text-498-144 {
+  position: absolute;
+  left: 75px;
+  top: 305px;
+  width: 111px;
+  height: 29px;
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 29.045454px;
+  color: #254d73; /* var(--typo-80-color) */
+}
+
+/* Input containers */
+#frame-498-146,
+#frame-498-147 {
+  position: absolute;
+  left: 276px;
+  width: 363px;
+  height: 66px;
+  background-color: #ffffff; /* var(--style-128-background-color) */
+  border: 1px solid #254d73; /* var(--style-128-border-color) */
+  border-radius: 6px; /* var(--style-128-border-radius) */
+}
+
+#frame-498-146 { top: 171px; }
+#frame-498-147 { top: 286px; }
+
+#frame-498-146 .placeholder,
+#frame-498-147 .placeholder {
+  position: absolute;
+  left: 9px;
+  top: 19px;
+  width: 121px;
+  height: 29px;
+  font-family: "Inter", sans-serif; /* typo_102 */
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29.045454px;
+  color: #000000;
+}
+
+/* Adjust password placeholder left from design (16px) */
+#frame-498-147 .placeholder { left: 16px; }
+
+/* Real input overlays (fully transparent to keep pixel offsets from Figma placeholder text) */
+.input-wrap {
+  position: absolute;
+
+  .input-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 18px 12px 18px 12px; /* internal padding that won't shift placeholder since text is positioned absolutely */
+    opacity: 0; /* Keep exact Figma visuals; the placeholder span is visible */
+    border: none;
+    outline: none;
+    font-size: 24px;
+    background: transparent;
+  }
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px rgba(t.$primary-r, t.$primary-g, t.$primary-b, 0.25);
+  }
+
+  &.error {
+    border-color: t.$error !important;
+    box-shadow: 0 0 0 2px rgba(t.$error-r, t.$error-g, t.$error-b, 0.15);
+  }
+}
+
+/* Login Button (Frame 130) */
+#frame-498-151 {
+  position: absolute;
+  left: 355px;
+  top: 426px;
+  width: 170px;
+  height: 52px;
+  background-color: #254d73; /* var(--style-129-background-color) */
+  border-radius: 6px; /* var(--style-129-border-radius) */
+  border: none;
+  cursor: pointer;
+  transition: filter 150ms ease, transform 120ms ease;
+}
+
+#frame-498-151:hover {
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+#frame-498-151:active {
+  transform: translateY(0);
+}
+#frame-498-151:disabled {
+  opacity: 0.7;
+  cursor: default;
+  transform: none;
+}
+
+#frame-498-151 .button-text {
+  position: absolute;
+  left: 55px;
+  top: 10px;
+  width: 60px;
+  height: 32px;
+  font-family: "Abyssinica SIL", serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 31.828125px;
+  color: #ffffff; /* var(--typo-104-color) */
+}
+
+/* Rectangle 'image 1' placeholder (logo area) */
+#rect-527-145 {
+  position: absolute;
+  left: 366px;
+  top: 52px;
+  width: 183px;
+  height: 45px;
+  background-color: #d9d9d9;
+  border-radius: 4px;
+}
+
+/* Utility */
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

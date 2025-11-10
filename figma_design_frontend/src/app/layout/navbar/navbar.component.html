@@ -14,6 +14,7 @@
     <div class="links" [class.open]="isOpen()">
       <a routerLink="/" routerLinkActive="active" (click)="toggle()">Home</a>
       <a routerLink="/about" routerLinkActive="active" (click)="toggle()">About</a>
+      <a routerLink="/login" routerLinkActive="active" (click)="toggle()">Login</a>
       <span class="spacer"></span>
 
       <span class="health" [ngClass]="statusClass(status())" [title]="message() || ''">
