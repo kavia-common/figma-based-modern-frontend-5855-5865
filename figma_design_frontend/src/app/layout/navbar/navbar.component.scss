@@ -1,0 +1,143 @@
+@use '../../../styles/theme.scss' as t;
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: t.$surface;
+  color: t.$text;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.06);
+  backdrop-filter: saturate(180%) blur(6px);
+}
+
+.nav-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: t.$text;
+  text-decoration: none;
+  font-weight: 600;
+
+  .brand-logo {
+    font-size: 1.25rem;
+  }
+  .brand-name {
+    letter-spacing: 0.2px;
+  }
+
+  &:hover {
+    color: t.$primary;
+  }
+}
+
+.hamburger {
+  margin-left: auto;
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  .bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: t.$text;
+    margin: 4px 0;
+    transition: background 200ms ease;
+  }
+
+  &:hover .bar {
+    background: t.$primary;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+
+  a {
+    color: t.$text;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: t.$radius-md;
+    transition: color 150ms ease, background-color 150ms ease;
+
+    &.active,
+    &:hover {
+      color: t.$primary;
+      background: rgba(t.$primary-r, t.$primary-g, t.$primary-b, 0.08);
+    }
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .health {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.04);
+    color: t.$text;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #9ca3af;
+    }
+
+    &.ok {
+      background: rgba(t.$success-r, t.$success-g, t.$success-b, 0.12);
+      color: t.$success;
+      .dot { background: t.$success; }
+    }
+    &.degraded {
+      background: rgba(245, 158, 11, 0.12);
+      color: #b45309;
+      .dot { background: #f59e0b; }
+    }
+    &.down {
+      background: rgba(t.$error-r, t.$error-g, t.$error-b, 0.12);
+      color: t.$error;
+      .dot { background: t.$error; }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: inline-block;
+  }
+  .links {
+    position: absolute;
+    top: 56px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: t.$surface;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0.75rem 1rem;
+    display: none;
+
+    &.open {
+      display: flex;
+    }
+  }
+}

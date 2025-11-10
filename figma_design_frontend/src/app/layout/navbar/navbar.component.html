@@ -1,0 +1,25 @@
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="brand" routerLink="/">
+      <span class="brand-logo">🌊</span>
+      <span class="brand-name">OceanPro</span>
+    </a>
+
+    <button class="hamburger" (click)="toggle()" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <div class="links" [class.open]="isOpen()">
+      <a routerLink="/" routerLinkActive="active" (click)="toggle()">Home</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="toggle()">About</a>
+      <span class="spacer"></span>
+
+      <span class="health" [ngClass]="statusClass(status())" [title]="message() || ''">
+        <span class="dot"></span>
+        <span class="label">{{ statusLabel(status()) }}</span>
+      </span>
+    </div>
+  </div>
+</nav>
