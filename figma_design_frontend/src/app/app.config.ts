@@ -7,6 +7,9 @@ import { RUNTIME_CONFIG, RuntimeConfig, RuntimeConfigService } from './core/serv
 
 /**
  * Loads runtime configuration from /assets/config.json at startup.
+ * This function ensures the app awaits the HTTP request but will not block boot
+ * if the file is missing or invalid; it falls back to empty config so services
+ * can derive values from environment variables or defaults.
  */
 function loadRuntimeConfig(): () => Promise<void> {
   return () => {
@@ -35,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
+    // Provide the RUNTIME_CONFIG token based on the holder service
     { provide: RUNTIME_CONFIG, useFactory: () => inject(RuntimeConfigService).get() },
     {
       provide: APP_INITIALIZER,

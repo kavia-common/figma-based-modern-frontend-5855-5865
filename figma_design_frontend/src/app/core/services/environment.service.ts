@@ -33,27 +33,39 @@ export class EnvironmentService {
   constructor() {
     // Sources in priority: runtime config -> window.env -> process.env -> defaults
     const rc = this.cfg.get() || {};
-    const w: any = (globalThis as any).env || (globalThis as any).ENV || {};
-    const pe: any = (typeof process !== 'undefined' && (process as any).env) ? (process as any).env : {};
+    const w: Partial<Record<string, unknown>> =
+      (globalThis as any).env || (globalThis as any).ENV || {};
+    const pe: Partial<Record<string, unknown>> =
+      typeof process !== 'undefined' && (process as any).env ? (process as any).env : {};
 
-    const backendFromEnv = (rc.NG_APP_BACKEND_URL || w.NG_APP_BACKEND_URL || pe.NG_APP_BACKEND_URL || '').toString().trim();
+    const backendFromEnv = (rc.NG_APP_BACKEND_URL ?? w['NG_APP_BACKEND_URL'] ?? pe['NG_APP_BACKEND_URL'] ?? '')
+      .toString()
+      .trim();
     this.backendUrl = backendFromEnv || 'http://localhost:3001';
 
-    const apiFromEnv = (rc.NG_APP_API_BASE || w.NG_APP_API_BASE || pe.NG_APP_API_BASE || '').toString().trim();
+    const apiFromEnv = (rc.NG_APP_API_BASE ?? w['NG_APP_API_BASE'] ?? pe['NG_APP_API_BASE'] ?? '')
+      .toString()
+      .trim();
     this.apiBase = apiFromEnv || `${this.backendUrl.replace(/\/+$/, '')}/api`;
 
-    this.wsUrl = (rc.NG_APP_WS_URL || w.NG_APP_WS_URL || pe.NG_APP_WS_URL || null) || null;
-    this.nodeEnv = (w.NG_APP_NODE_ENV || pe.NG_APP_NODE_ENV || 'development').toString();
-    this.logLevel = (w.NG_APP_LOG_LEVEL || pe.NG_APP_LOG_LEVEL || null) || null;
-    this.healthPath = (w.NG_APP_HEALTHCHECK_PATH || pe.NG_APP_HEALTHCHECK_PATH || '/').toString();
+    const wsRaw = rc.NG_APP_WS_URL ?? w['NG_APP_WS_URL'] ?? pe['NG_APP_WS_URL'] ?? null;
+    this.wsUrl = wsRaw ? wsRaw.toString().trim() : null;
 
-    // Feature flags may arrive as an object (runtime config) or a JSON string (env)
+    this.nodeEnv = (w['NG_APP_NODE_ENV'] ?? pe['NG_APP_NODE_ENV'] ?? 'development').toString();
+    this.logLevel = (w['NG_APP_LOG_LEVEL'] ?? pe['NG_APP_LOG_LEVEL'] ?? null as any)?.toString?.() ?? null;
+
+    // Default health path aligns with backend health/docs plan; prefer /health
+    const healthDefault = '/health';
+    const hp = (w['NG_APP_HEALTHCHECK_PATH'] ?? pe['NG_APP_HEALTHCHECK_PATH'] ?? healthDefault).toString();
+    this.healthPath = hp.startsWith('/') ? hp : `/${hp}`;
+
+    // Feature flags may arrive as an object (runtime) or a JSON string (env)
     const flagsFromRuntime = rc.NG_APP_FEATURE_FLAGS;
     let parsed: Record<string, unknown> = {};
     if (flagsFromRuntime && typeof flagsFromRuntime === 'object') {
       parsed = flagsFromRuntime as Record<string, unknown>;
     } else {
-      const flagsRaw = (w.NG_APP_FEATURE_FLAGS || pe.NG_APP_FEATURE_FLAGS || '').toString();
+      const flagsRaw = (w['NG_APP_FEATURE_FLAGS'] ?? pe['NG_APP_FEATURE_FLAGS'] ?? '').toString();
       if (flagsRaw) {
         try {
           parsed = JSON.parse(flagsRaw);
@@ -69,7 +81,9 @@ export class EnvironmentService {
     if (typeof expFromRuntime === 'boolean') {
       this.experimentsEnabled = expFromRuntime;
     } else {
-      const expRaw = (w.NG_APP_EXPERIMENTS_ENABLED || pe.NG_APP_EXPERIMENTS_ENABLED || '').toString().toLowerCase();
+      const expRaw = (w['NG_APP_EXPERIMENTS_ENABLED'] ?? pe['NG_APP_EXPERIMENTS_ENABLED'] ?? '')
+        .toString()
+        .toLowerCase();
       this.experimentsEnabled = expRaw === 'true' || expRaw === '1';
     }
 
@@ -108,10 +122,50 @@ export class EnvironmentService {
 
   // PUBLIC_INTERFACE
   /**
-   * Returns the full healthcheck URL.
+   * Returns the full healthcheck URL using the resolved apiBase and healthPath.
    */
   healthUrl(): string {
     const hp = this.healthPath.startsWith('/') ? this.healthPath : `/${this.healthPath}`;
     return `${this.apiBase.replace(/\/+$/, '')}${hp}`;
+  }
+
+  // PUBLIC_INTERFACE
+  /**
+   * Strongly typed getter for NG_APP_API_BASE.
+   */
+  getApiBase(): string {
+    return this.apiBase;
+  }
+
+  // PUBLIC_INTERFACE
+  /**
+   * Strongly typed getter for NG_APP_BACKEND_URL.
+   */
+  getBackendUrl(): string {
+    return this.backendUrl;
+  }
+
+  // PUBLIC_INTERFACE
+  /**
+   * Strongly typed getter for NG_APP_WS_URL.
+   */
+  getWebSocketUrl(): string | null {
+    return this.wsUrl;
+  }
+
+  // PUBLIC_INTERFACE
+  /**
+   * Strongly typed getter for NG_APP_FEATURE_FLAGS.
+   */
+  getFeatureFlags<T extends Record<string, unknown> = Record<string, unknown>>(): T {
+    return this.featureFlags as T;
+  }
+
+  // PUBLIC_INTERFACE
+  /**
+   * Strongly typed getter for NG_APP_EXPERIMENTS_ENABLED.
+   */
+  getExperimentsEnabled(): boolean {
+    return this.experimentsEnabled;
   }
 }

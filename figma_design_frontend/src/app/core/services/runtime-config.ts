@@ -3,6 +3,8 @@ import { Injectable, InjectionToken } from '@angular/core';
 /**
  * PUBLIC_INTERFACE
  * RuntimeConfig describes the shape of the configuration loaded from assets/config.json.
+ * Only keys that must be runtime-tunable belong here; build-time Angular environment
+ * files are intentionally avoided so deployments can change values without rebuilds.
  */
 export interface RuntimeConfig {
   /** Base API URL, e.g., http://localhost:3001/api */
@@ -31,12 +33,19 @@ export const RUNTIME_CONFIG = new InjectionToken<RuntimeConfig>('RUNTIME_CONFIG'
 export class RuntimeConfigService {
   private _config: RuntimeConfig = {};
 
-  /** Sets the config loaded by the initializer. */
+  /**
+   * PUBLIC_INTERFACE
+   * Sets the config loaded by the initializer.
+   */
   set(config: RuntimeConfig) {
     this._config = config || {};
   }
 
-  /** Returns the current runtime config. */
+  /**
+   * PUBLIC_INTERFACE
+   * Returns the current runtime config. Consumers should use EnvironmentService
+   * for normalized values and fallbacks.
+   */
   get(): RuntimeConfig {
     return this._config;
   }
