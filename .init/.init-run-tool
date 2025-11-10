@@ -1,0 +1,4 @@
+{
+    "command": "npm start -- --port <port> --host <host>",
+    "working_directory": "/home/kavia/workspace/code-generation/figma-based-modern-frontend-5855-5865/figma_design_frontend"
+}
