@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, Signal, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 
 // The LoginComponent reproduces the pixel-accurate layout from assets/login-page-497-140
 // using component-scoped SCSS and provides a reactive form for email/password.
@@ -17,14 +18,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   /** Reactive login form with email and password fields */
   form!: FormGroup;
 
-  /** Simple submitting state for demo purpose */
+  /** Simple submitting state */
   submitting = signal(false);
-  /** Optional message to show submission result */
-  message: Signal<string | null> = computed(() => null);
+  /** Message to show submission result */
+  message = signal<string | null>(null);
 
   private subs: Array<() => void> = [];
 
-  constructor(private fb: FormBuilder) {}
+  private readonly fb = inject(FormBuilder);
+  private readonly auth = inject(AuthService);
 
   ngOnInit(): void {
     // Initialize form with validators
@@ -33,7 +35,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: ['', [Validators.required]],
     });
 
-    // Ported "Login button clicked" behavior: when submit is called and form valid, log details.
     const un = () => {};
     this.subs.push(un);
   }
@@ -48,25 +49,26 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // PUBLIC_INTERFACE
   /** Submit handler for the login form */
-  submit(): void {
+  async submit(): Promise<void> {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
       return;
     }
     this.submitting.set(true);
+    this.message.set(null);
 
-    // Simulate submission delay and echo to console (placeholder auth)
-    // In a real app, integrate with an AuthService and EnvironmentService.apiBase
-    const payload = this.form.value;
-    console.log('Login attempt', payload);
+    const { email, password } = this.form.value;
 
-    // Use globalThis.setTimeout for SSR/lint-safe environment instead of bare setTimeout (no-undef)
-    const g: any = (typeof globalThis !== 'undefined' ? globalThis : undefined);
-    g?.setTimeout?.(() => {
+    try {
+      const state = await this.auth.login(email, password);
+      if (state.isAuthenticated) {
+        this.message.set('Logged in');
+      }
+    } catch (err: any) {
+      this.message.set(err?.message || 'Login failed');
+    } finally {
       this.submitting.set(false);
-      // For demo, just log success. Could set a success message signal if needed.
-      console.log('Login simulated success');
-    }, 600);
+    }
   }
 
   // PUBLIC_INTERFACE

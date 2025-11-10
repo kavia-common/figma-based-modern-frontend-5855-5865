@@ -15,7 +15,15 @@
       <a routerLink="/" routerLinkActive="active" (click)="toggle()">Home</a>
       <a routerLink="/about" routerLinkActive="active" (click)="toggle()">About</a>
       <a routerLink="/wireframe" routerLinkActive="active" (click)="toggle()">Wireframe</a>
-      <a routerLink="/login" routerLinkActive="active" (click)="toggle()">Login</a>
+
+      <!-- Auth-aware link area -->
+      <ng-container *ngIf="isAuthed(); else showLogin">
+        <button class="btn ghost" type="button" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #showLogin>
+        <a routerLink="/login" routerLinkActive="active" (click)="toggle()">Login</a>
+      </ng-template>
+
       <span class="spacer"></span>
 
       <span class="health" [ngClass]="statusClass(status())" [title]="message() || ''">
