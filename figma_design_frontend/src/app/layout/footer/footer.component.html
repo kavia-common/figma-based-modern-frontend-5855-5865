@@ -5,5 +5,9 @@
       <a href="https://angular.dev" target="_blank" rel="noopener noreferrer">Angular</a>
       <a href="https://kavia.ai" target="_blank" rel="noopener noreferrer">Kavia</a>
     </nav>
+    <span class="health" [class.ok]="status() === 'ok'" [class.degraded]="status() === 'degraded'" [class.down]="status() === 'down'" [title]="message() || ''" aria-live="polite">
+      <span class="dot"></span>
+      <span class="label">{{ statusLabel(status()) }}</span>
+    </span>
   </div>
 </footer>

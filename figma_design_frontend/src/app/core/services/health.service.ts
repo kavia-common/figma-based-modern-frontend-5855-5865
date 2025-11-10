@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, timer, switchMap } from 'rxjs';
 import { EnvironmentService } from './environment.service';
+import { ApiService } from './api.service';
 
 export type HealthStatus = 'unknown' | 'ok' | 'degraded' | 'down';
 
@@ -22,6 +23,7 @@ interface HealthResponse {
 export class HealthService {
   private readonly http = inject(HttpClient);
   private readonly env = inject(EnvironmentService);
+  private readonly api = inject(ApiService);
 
   private readonly status$ = new BehaviorSubject<HealthStatus>('unknown');
   private readonly lastMessage$ = new BehaviorSubject<string | null>(null);
@@ -57,7 +59,7 @@ export class HealthService {
    * Manually triggers a health check once.
    */
   checkOnce(): Observable<HealthStatus> {
-    const url = this.env.healthUrl();
+    const url = this.api.healthUrl();
     return this.http.get<HealthResponse>(url).pipe(
       map((r) => {
         const s = (r?.status || '').toLowerCase();
