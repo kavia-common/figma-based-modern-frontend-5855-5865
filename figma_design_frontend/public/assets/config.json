@@ -1,4 +1,7 @@
 {
-  "NG_APP_BACKEND_URL": "https://vscode-internal-42336-beta.beta01.cloud.kavia.ai:3001",
-  "NG_APP_API_BASE": "https://vscode-internal-42336-beta.beta01.cloud.kavia.ai:3001/api"
+  "NG_APP_BACKEND_URL": "",
+  "NG_APP_API_BASE": "",
+  "NG_APP_WS_URL": "",
+  "NG_APP_FEATURE_FLAGS": {},
+  "NG_APP_EXPERIMENTS_ENABLED": false
 }

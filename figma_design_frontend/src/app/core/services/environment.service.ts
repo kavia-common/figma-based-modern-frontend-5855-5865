@@ -6,6 +6,10 @@ import { RuntimeConfigService } from './runtime-config';
  * Provides environment-aware configuration for API endpoints and app behavior.
  * It prefers values loaded at runtime from assets/config.json via APP_INITIALIZER,
  * but gracefully falls back to window.env, process.env, or sensible local defaults.
+ *
+ * In "no-backend" mode, where NG_APP_API_BASE/NG_APP_BACKEND_URL are empty strings,
+ * the service avoids fabricating localhost defaults and exposes isBackendConfigured=false.
+ * Callers can use that to short-circuit network calls safely.
  */
 @Injectable({
   providedIn: 'root',
@@ -27,6 +31,8 @@ export class EnvironmentService {
   readonly featureFlags: Record<string, unknown>;
   /** Whether experiments are enabled */
   readonly experimentsEnabled: boolean;
+  /** Whether a backend has been configured (non-empty API base or backend url) */
+  readonly isBackendConfigured: boolean;
 
   private readonly cfg = inject(RuntimeConfigService);
 
@@ -38,15 +44,22 @@ export class EnvironmentService {
     const pe: Partial<Record<string, unknown>> =
       typeof process !== 'undefined' && (process as any).env ? (process as any).env : {};
 
-    const backendFromEnv = (rc.NG_APP_BACKEND_URL ?? w['NG_APP_BACKEND_URL'] ?? pe['NG_APP_BACKEND_URL'] ?? '')
+    const rawBackend = (rc.NG_APP_BACKEND_URL ?? w['NG_APP_BACKEND_URL'] ?? pe['NG_APP_BACKEND_URL'] ?? '')
       .toString()
       .trim();
-    this.backendUrl = backendFromEnv || 'http://localhost:3001';
+    const rawApi = (rc.NG_APP_API_BASE ?? w['NG_APP_API_BASE'] ?? pe['NG_APP_API_BASE'] ?? '')
+      .toString()
+      .trim();
 
-    const apiFromEnv = (rc.NG_APP_API_BASE ?? w['NG_APP_API_BASE'] ?? pe['NG_APP_API_BASE'] ?? '')
-      .toString()
-      .trim();
-    this.apiBase = apiFromEnv || `${this.backendUrl.replace(/\/+$/, '')}/api`;
+    // If both are blank, treat as "no-backend" mode; do not force localhost defaults.
+    const inNoBackendMode = rawBackend === '' && rawApi === '';
+    this.isBackendConfigured = !inNoBackendMode;
+
+    // When configured, resolve derived values; otherwise keep them empty strings.
+    this.backendUrl = this.isBackendConfigured ? (rawBackend || 'http://localhost:3001') : '';
+    this.apiBase = this.isBackendConfigured
+      ? (rawApi || `${this.backendUrl.replace(/\/+$/, '')}/api`)
+      : '';
 
     const wsRaw = rc.NG_APP_WS_URL ?? w['NG_APP_WS_URL'] ?? pe['NG_APP_WS_URL'] ?? null;
     this.wsUrl = wsRaw ? wsRaw.toString().trim() : null;
@@ -97,6 +110,7 @@ export class EnvironmentService {
         healthPath: this.healthPath,
         featureFlags: this.featureFlags,
         experimentsEnabled: this.experimentsEnabled,
+        isBackendConfigured: this.isBackendConfigured,
       });
     }
   }
@@ -113,9 +127,10 @@ export class EnvironmentService {
 
   // PUBLIC_INTERFACE
   /**
-   * Builds a full API URL from a path fragment.
+   * Builds a full API URL from a path fragment. In no-backend mode, returns an empty string.
    */
   toApiUrl(path: string): string {
+    if (!this.isBackendConfigured || !this.apiBase) return '';
     const p = path.startsWith('/') ? path : `/${path}`;
     return `${this.apiBase.replace(/\/+$/, '')}${p}`;
   }
@@ -123,49 +138,33 @@ export class EnvironmentService {
   // PUBLIC_INTERFACE
   /**
    * Returns the full healthcheck URL using the resolved apiBase and healthPath.
+   * In no-backend mode, returns an empty string.
    */
   healthUrl(): string {
+    if (!this.isBackendConfigured || !this.apiBase) return '';
     const hp = this.healthPath.startsWith('/') ? this.healthPath : `/${this.healthPath}`;
     return `${this.apiBase.replace(/\/+$/, '')}${hp}`;
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Strongly typed getter for NG_APP_API_BASE.
-   */
-  getApiBase(): string {
-    return this.apiBase;
-  }
+  /** Strongly typed getter for NG_APP_API_BASE. */
+  getApiBase(): string { return this.apiBase; }
 
   // PUBLIC_INTERFACE
-  /**
-   * Strongly typed getter for NG_APP_BACKEND_URL.
-   */
-  getBackendUrl(): string {
-    return this.backendUrl;
-  }
+  /** Strongly typed getter for NG_APP_BACKEND_URL. */
+  getBackendUrl(): string { return this.backendUrl; }
 
   // PUBLIC_INTERFACE
-  /**
-   * Strongly typed getter for NG_APP_WS_URL.
-   */
-  getWebSocketUrl(): string | null {
-    return this.wsUrl;
-  }
+  /** Strongly typed getter for NG_APP_WS_URL. */
+  getWebSocketUrl(): string | null { return this.wsUrl; }
 
   // PUBLIC_INTERFACE
-  /**
-   * Strongly typed getter for NG_APP_FEATURE_FLAGS.
-   */
+  /** Strongly typed getter for NG_APP_FEATURE_FLAGS. */
   getFeatureFlags<T extends Record<string, unknown> = Record<string, unknown>>(): T {
     return this.featureFlags as T;
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Strongly typed getter for NG_APP_EXPERIMENTS_ENABLED.
-   */
-  getExperimentsEnabled(): boolean {
-    return this.experimentsEnabled;
-  }
+  /** Strongly typed getter for NG_APP_EXPERIMENTS_ENABLED. */
+  getExperimentsEnabled(): boolean { return this.experimentsEnabled; }
 }

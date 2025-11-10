@@ -64,7 +64,8 @@ export class NavbarComponent {
       case 'down':
         return 'Offline';
       default:
-        return 'Checking';
+        // unknown → No backend configured or initial check
+        return 'No backend';
     }
   }
 }

@@ -52,7 +52,7 @@ export class FooterComponent {
       case 'down':
         return 'Offline';
       default:
-        return 'Checking';
+        return 'No backend';
     }
   }
 }

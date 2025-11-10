@@ -16,6 +16,7 @@ interface HealthResponse {
 /**
  * PUBLIC_INTERFACE
  * Provides periodic health checks against the backend and exposes status as an observable.
+ * In no-backend mode, status remains 'unknown' with a neutral message and no errors.
  */
 @Injectable({
   providedIn: 'root',
@@ -57,18 +58,36 @@ export class HealthService {
   // PUBLIC_INTERFACE
   /**
    * Manually triggers a health check once.
+   * If no backend is configured, emits 'unknown' without network calls.
    */
   checkOnce(): Observable<HealthStatus> {
+    // No-backend mode: keep neutral state and do not attempt HTTP
+    if (!this.env.isBackendConfigured) {
+      this.status$.next('unknown');
+      this.lastMessage$.next('No backend configured');
+      return of('unknown' as HealthStatus);
+    }
+
     const url = this.api.healthUrl();
+    if (!url) {
+      this.status$.next('unknown');
+      this.lastMessage$.next('No backend configured');
+      return of('unknown' as HealthStatus);
+    }
+
     return this.http.get<HealthResponse>(url).pipe(
       map((r) => {
         const s = (r?.status || '').toLowerCase();
-        const normalized: HealthStatus = s === 'ok' ? 'ok' : s === 'degraded' ? 'degraded' : s ? 'down' : 'down';
+        const normalized: HealthStatus =
+          s === 'ok' ? 'ok' :
+          s === 'degraded' ? 'degraded' :
+          s ? 'down' : 'down';
         this.status$.next(normalized);
         this.lastMessage$.next(r?.message || null);
         return normalized;
       }),
       catchError((err) => {
+        // In configured mode, errors indicate unreachable backend
         if (this.env.shouldLog('warn')) {
           console.warn('[HealthService] health check failed', err);
         }
