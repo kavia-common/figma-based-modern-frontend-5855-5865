@@ -12,6 +12,39 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+## Runtime API configuration
+
+This app reads deployment-time configuration from `/assets/config.json` at bootstrap (see `README_RUNTIME_CONFIG.md` for details). This allows pointing the frontend to any backend without rebuilding.
+
+- Keys supported:
+  - `NG_APP_BACKEND_URL`: Backend origin, e.g. `http://localhost:3001` or your preview URL.
+  - `NG_APP_API_BASE`: Full API base, e.g. `http://localhost:3001/api`. If omitted, it defaults to `<NG_APP_BACKEND_URL>/api`.
+
+- Where to place the file:
+  - Put `config.json` under `public/assets/config.json` (already added to build assets). It will be served at `/assets/config.json`.
+
+- Example for the current backend preview:
+  ```json
+  {
+    "NG_APP_BACKEND_URL": "https://vscode-internal-42336-beta.beta01.cloud.kavia.ai:3001",
+    "NG_APP_API_BASE": "https://vscode-internal-42336-beta.beta01.cloud.kavia.ai:3001/api"
+  }
+  ```
+
+- Environment fallbacks:
+  - If `config.json` is missing, the app falls back to `window.env.NG_APP_*` / `process.env.NG_APP_*` if provided, otherwise defaults to `http://localhost:3001` and `/api`.
+
+Note: Do not include secrets in `config.json`. It is publicly served.
+
+## Verifying frontend-backend wiring
+
+- Health indicator (navbar/footer) calls the backend health endpoint at `${NG_APP_API_BASE}/health` using `EnvironmentService` and `ApiService`.
+- To check connectivity:
+  1. Ensure your backend is running and exposes `/health` (Express preview is at port 3001).
+  2. Set `/public/assets/config.json` as shown above.
+  3. Start the app: `ng serve`.
+  4. Observe the status chip show “Online” when healthy.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
