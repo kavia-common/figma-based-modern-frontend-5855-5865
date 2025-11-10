@@ -2,4 +2,6 @@
   min-height: calc(100vh - 56px - 64px);
   background: var(--bg, #f9fafb);
   padding: 1rem 0;
+  /* Reserve content width similar to container to reduce CLS on route change */
+  width: 100%;
 }

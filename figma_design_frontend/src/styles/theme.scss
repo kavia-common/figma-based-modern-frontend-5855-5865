@@ -20,10 +20,21 @@ $success-r: 245; $success-g: 158; $success-b: 11;
 $error-r: 239; $error-g: 68; $error-b: 68;
 $text-r: 17; $text-g: 24; $text-b: 39;
 
+/* Spacing scale */
+$space-2xs: 2px;
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 24px;
+$space-2xl: 32px;
+$space-3xl: 48px;
+
 /* Radii */
 $radius-sm: 6px;
 $radius-md: 10px;
 $radius-lg: 14px;
+$radius-xl: 18px;
 $radius-pill: 999px;
 
 /* Shadows */
@@ -32,12 +43,36 @@ $shadow-sm: 0 2px 8px rgba(17, 24, 39, 0.06);
 $shadow-md: 0 6px 16px rgba(17, 24, 39, 0.08);
 $shadow-lg: 0 12px 24px rgba(17, 24, 39, 0.12);
 
+/* Elevation helper mixin */
+@mixin elevate($level: md) {
+  @if $level == xs { box-shadow: $shadow-xs; }
+  @else if $level == sm { box-shadow: $shadow-sm; }
+  @else if $level == md { box-shadow: $shadow-md; }
+  @else if $level == lg { box-shadow: $shadow-lg; }
+}
+
 /* Gradient */
 $ocean-gradient: linear-gradient(
   135deg,
   rgba(rgb($primary-r, $primary-g, $primary-b), 0.10),
   #f8fafc
 );
+
+/* Breakpoints */
+$bp-mobile-max: 640px; // ≤640
+$bp-tablet-min: 641px; // 641–1024
+$bp-tablet-max: 1024px;
+$bp-desktop-min: 1025px;
+
+@mixin mobile { @media (max-width: #{$bp-mobile-max}) { @content; } }
+@mixin tablet { @media (min-width: #{$bp-tablet-min}) and (max-width: #{$bp-tablet-max}) { @content; } }
+@mixin desktop { @media (min-width: #{$bp-desktop-min}) { @content; } }
+
+/* Focus ring (accessible) */
+@mixin focus-ring {
+  outline: 2px solid rgba($primary, 0.45);
+  outline-offset: 2px;
+}
 
 /* CSS custom properties for runtime theming */
 :root {
@@ -52,6 +87,7 @@ $ocean-gradient: linear-gradient(
   --radius-sm: #{$radius-sm};
   --radius-md: #{$radius-md};
   --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
   --radius-pill: #{$radius-pill};
 
   --shadow-xs: #{$shadow-xs};
@@ -60,9 +96,19 @@ $ocean-gradient: linear-gradient(
   --shadow-lg: #{$shadow-lg};
 
   --gradient-ocean: #{$ocean-gradient};
+
+  /* spacing variables for utilities */
+  --space-2xs: #{$space-2xs};
+  --space-xs: #{$space-xs};
+  --space-sm: #{$space-sm};
+  --space-md: #{$space-md};
+  --space-lg: #{$space-lg};
+  --space-xl: #{$space-xl};
+  --space-2xl: #{$space-2xl};
+  --space-3xl: #{$space-3xl};
 }
 
-/* Utility classes (lightweight, optional) */
+/* Buttons (Ocean Professional) */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -79,6 +125,8 @@ $ocean-gradient: linear-gradient(
     transform 120ms ease;
   cursor: pointer;
   border: 1px solid transparent;
+
+  &:focus-visible { @include focus-ring; }
 
   &.primary {
     background: $primary;
@@ -128,6 +176,7 @@ $ocean-gradient: linear-gradient(
 .rounded-sm { border-radius: $radius-sm; }
 .rounded-md { border-radius: $radius-md; }
 .rounded-lg { border-radius: $radius-lg; }
+.rounded-xl { border-radius: $radius-xl; }
 .rounded-pill { border-radius: $radius-pill; }
 
 /* Shadow utilities */
@@ -135,6 +184,57 @@ $ocean-gradient: linear-gradient(
 .shadow-sm { box-shadow: $shadow-sm; }
 .shadow-md { box-shadow: $shadow-md; }
 .shadow-lg { box-shadow: $shadow-lg; }
+
+/* Responsive display utilities */
+.hide-mobile { @include mobile { display: none !important; } }
+.hide-tablet { @include tablet { display: none !important; } }
+.hide-desktop { @include desktop { display: none !important; } }
+
+/* Responsive grid utilities */
+.grid-responsive {
+  display: grid;
+  gap: $space-lg;
+
+  @include mobile { grid-template-columns: 1fr; }
+  @include tablet { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  @include desktop { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+
+/* Container width utility */
+.container-responsive {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  @include mobile { padding: 0 0.75rem; }
+  @include tablet { padding: 0 1rem; }
+  @include desktop { padding: 0 1rem; }
+}
+
+/* Accessible focus outline for links and interactive elements */
+a, button, [role="button"], input, select, textarea {
+  &:focus-visible { @include focus-ring; }
+}
+
+/* Health badge responsive tweaks and wrapping */
+.health, .status {
+  min-height: 24px;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+  .label { white-space: nowrap; }
+  @include mobile {
+    max-width: 50vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Utility to reserve image/container sizes to reduce CLS */
+.size-reserved {
+  display: block;
+  background-color: rgba(0,0,0,0.03);
+}
 
 /* Expose SCSS variables to component styles (via @use as t;) */
 $theme: (
@@ -148,10 +248,15 @@ $theme: (
   radius-sm: $radius-sm,
   radius-md: $radius-md,
   radius-lg: $radius-lg,
+  radius-xl: $radius-xl,
   radius-pill: $radius-pill,
   shadow-xs: $shadow-xs,
   shadow-sm: $shadow-sm,
   shadow-md: $shadow-md,
   shadow-lg: $shadow-lg,
-  gradient: $ocean-gradient
+  gradient: $ocean-gradient,
+  bp-mobile-max: $bp-mobile-max,
+  bp-tablet-min: $bp-tablet-min,
+  bp-tablet-max: $bp-tablet-max,
+  bp-desktop-min: $bp-desktop-min
 );

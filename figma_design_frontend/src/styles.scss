@@ -41,6 +41,8 @@ small { font-size: 0.875rem; color: #6b7280; }
 a {
   color: t.$primary;
   text-decoration: none;
+
+  &:focus-visible { outline: 2px solid rgba(t.$primary, .45); outline-offset: 2px; }
 }
 a:hover { text-decoration: underline; }
 
@@ -51,6 +53,9 @@ a:hover { text-decoration: underline; }
   padding: 0 1rem;
 }
 
+/* Responsive container utility (from theme) */
+.container-responsive { @extend .container-responsive; }
+
 /* Button + surface shortcuts from theme */
 .btn { @extend .btn; } /* allows using .btn base without variant */
 .btn.primary { @extend .btn, .primary; }
@@ -59,6 +64,11 @@ a:hover { text-decoration: underline; }
 .btn.danger { @extend .btn, .danger; }
 
 .surface { @extend .surface; }
+
+/* Form controls baseline focus */
+input, select, textarea, button {
+  &:focus-visible { outline: 2px solid rgba(t.$primary, .45); outline-offset: 2px; }
+}
 
 /* Global selection color to match theme */
 ::selection {
