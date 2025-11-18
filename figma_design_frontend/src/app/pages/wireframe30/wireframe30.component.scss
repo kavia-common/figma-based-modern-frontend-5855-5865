@@ -3,8 +3,6 @@
 .screen{position:relative;width:1920px;height:1080px;background:var(--color-f0f0f0);overflow:hidden;font-family:'Inter',Arial,sans-serif;contain:layout paint size}
 .text,[class^="text-"]{position:absolute;margin:0;padding:0}
 [class^="node-"],.container,.icon,.rectangle{position:absolute}
-
-/* Top bars */
 .node-540-445{left:0;top:0;width:1920px;height:60px;background:var(--color-2d67a1)}
 .node-540-446{left:505px;top:14px;width:1390px;height:32px}
 .node-540-447{left:1699px;top:0;width:32px;height:32px}
@@ -14,8 +12,6 @@
 .node-540-451{left:2.429px;top:1.668px;width:27.142px;height:28.667px;background:var(--color-eef6ff)}
 .node-540-452{left:1863px;top:0;width:32px;height:32px}
 .node-540-453{left:3.210px;top:3.223px;width:25.580px;height:25.560px;background:#f3f3f3}
-
-/* Secondary tab bar */
 .node-540-598{left:0;top:60px;width:1920px;height:67px;background:#fff;box-shadow:var(--shadow-0)}
 .node-540-599{left:31px;top:0;width:134px;height:67px;background:#ddd;border:1px solid #254d73}
 .text-540-600{left:41px;top:18.5px;font:400 24px "Abyssinica SIL",serif;color:var(--color-003d7b)}
@@ -26,15 +22,11 @@
 .node-540-605{left:638px;top:9px;width:131px;height:49px;border-radius:15px}
 .text-540-606{left:648px;top:18px;font:400 24px "Inter",sans-serif;color:#595959}
 .text-540-607{left:853px;top:78px;font:400 24px "Inter",sans-serif;color:#595959}
-
-/* Breadcrumb + logo */
 .node-540-608{left:73px;top:147px;width:184.5px;height:49px}
 .node-540-609{left:0;top:0;width:144px;height:49px;background:var(--color-2d67a1)}
 .text-540-610{left:10px;top:10px;font:400 24px "Inter",sans-serif;color:#eef6ff}
 .node-540-611{left:144.5px;top:.5px;width:40px;height:48px;background:var(--color-2d67a1)}
 .node-540-612{left:6px;top:7px;width:185px;height:46px;background:#d9d9d9}
-
-/* KPI cards */
 .node-540-454,.node-540-460,.node-540-469,.node-540-475{top:216px;width:395px;height:139px;background:#fff;border:4px solid var(--color-6a9dd0);border-radius:25px;box-shadow:var(--shadow-0)}
 .node-540-454{left:61px}.node-540-460{left:532px}.node-540-469{left:1000px;top:214px}.node-540-475{left:1466px}
 .text-540-455,.text-540-461,.text-540-470,.text-540-476{left:24px;top:28px;font:400 24px "Abyssinica SIL",serif;color:var(--color-003d7b)}
@@ -47,22 +39,24 @@
 .node-540-472{left:322px;top:39px;width:60px;height:60px}
 .node-540-473{left:5px;top:5px;width:50px;height:50px;border:5.75px solid var(--color-003d7b);border-radius:8px}
 .node-540-474{left:19.375px;top:22.926px;width:21.25px;height:14.15px;border:3.75px solid var(--color-003d7b)}
-
-/* Right analytics card */
 .node-540-613{left:1004px;top:390px;width:862px;height:647px;background:#fff;border:1px solid var(--color-6a9dd0);border-radius:20px;box-shadow:var(--shadow-0)}
 .text-540-653{left:352px;top:13px;font:400 32px "Abyssinica SIL",serif;color:var(--color-003d7b)}
 .node-540-635{left:595.884px;top:429.891px;width:340.409px;height:183.677px}
-.node-540-638{left:0;top:0;width:26.185px;height:24.616px;background:var(--color-4b7eb1)}
-.node-540-641{left:0;top:0;width:26.185px;height:24.616px;background:var(--color-d96c6c)}
-.node-540-644{left:0;top:0;width:26.185px;height:24.616px;background:var(--color-6bae75)}
-.text-540-649,.text-540-650,.text-540-651,.text-540-652{left:672.648px;font:400 13px "Inter",sans-serif;color:#000}
-.text-540-649{top:446.84px}.text-540-650{top:487.566px}.text-540-651{top:527.133px}.text-540-652{top:560.586px}
+.node-540-638,.node-540-641,.node-540-644{left:0;top:0;width:26.185px;height:24.616px}
+.node-540-638{background:var(--color-4b7eb1)}
+.node-540-641{background:var(--color-d96c6c)}
+.node-540-644{background:var(--color-6bae75)}
+/* Shared 13px Inter text baseline */
+[class^="text-"][class*="-540-"], .text {
+  font:400 13px "Inter",sans-serif
+}
 
-/* Large chart area (left) */
+.text-540-649,.text-540-650,.text-540-651,.text-540-652{left:672.648px;color:#000}
+.text-540-649{top:446.84px}.text-540-650{top:487.566px}.text-540-651{top:527.133px}.text-540-652{top:560.586px}
 .node-540-655{left:61px;top:388px;width:866px;height:647px;background:#fff;border:1px solid var(--color-6a9dd0);border-radius:20px;box-shadow:var(--shadow-0)}
-.text-540-485,.text-540-486,.text-540-487,.text-540-488{top:497px;font:400 13px "Inter",sans-serif;color:#000}
+.text-540-485,.text-540-486,.text-540-487,.text-540-488{top:497px;color:#000}
 .text-540-485{left:102px}.text-540-486{left:252px}.text-540-487{left:422px;top:493px}.text-540-488{left:559px;top:491px}
-.text-540-489,.text-540-490{left:630px;font:400 13px "Inter",sans-serif}
+.text-540-489,.text-540-490{left:630px}
 .text-540-489{top:59px}.text-540-490{top:33px}
 .node-540-491{left:27.107px;top:121.023px;width:712.912px;height:440.172px}
 .node-540-492{left:0;top:414.871px;width:674.962px;height:1.686px;background:var(--color-333333)}
@@ -93,17 +87,17 @@
 .node-540-526 .text-540-527{left:0;top:82.968px}
 .node-540-528 .text-540-529{left:0;top:0}
 .node-540-539{inset:0}
-.text-540-540{left:122px;top:561px;font:400 13px "Inter",sans-serif}
-.text-540-541{left:302px;top:561px;font:400 13px "Inter",sans-serif}
-.text-540-543{left:630px;top:59px;font:400 13px "Inter",sans-serif}
-.text-540-544{left:630px;top:33px;font:400 13px "Inter",sans-serif}
+.text-540-540{left:122px;top:561px}
+.text-540-541{left:302px;top:561px}
+.text-540-543{left:630px;top:59px}
+.text-540-544{left:630px;top:33px}
 .node-540-584{left:778.834px;top:33.746px;width:142.311px;height:57.340px}
 .node-540-587{left:0;top:0;width:35.239px;height:21.924px;background:var(--color-d96c6c)}
 .node-540-590{left:0;top:0;width:35.239px;height:21.924px;background:var(--color-6bae75)}
 .text-540-592{left:122px;top:561px}
 .text-540-593{left:336px;top:596px}
 .text-540-594{left:318px;top:8px;font:400 32px "Abyssinica SIL",serif;color:var(--color-003d7b)}
-.text-540-595{left:302px;top:561px;font:400 13px "Inter",sans-serif}
-.text-540-596{left:472px;top:561px;font:400 13px "Inter",sans-serif}
-.text-540-597{left:611px;top:563px;font:400 13px "Inter",sans-serif}
+.text-540-595{left:302px;top:561px}
+.text-540-596{left:472px;top:561px}
+.text-540-597{left:611px;top:563px}
 *{box-sizing:border-box}
