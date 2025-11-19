@@ -1,3 +1,18 @@
-<div class="container">
-  <h1>{{ title }}</h1>
-</div>
+<nav class="navbar">
+  <div class="logo" style="font-weight:bold;font-family:'Abyssinica SIL',serif;font-size:1.38rem;color:var(--color-blue);letter-spacing:.02em;">
+    <span>OceanPro</span>
+  </div>
+  <div class="nav-links">
+    <a routerLink="/" routerLinkActive="active" class="nav-link" [routerLinkActiveOptions]="{exact:true}">Dashboard</a>
+    <a routerLink="/config" routerLinkActive="active" class="nav-link">Config</a>
+    <a routerLink="/suites" routerLinkActive="active" class="nav-link">Test Suites</a>
+    <a routerLink="/execution" routerLinkActive="active" class="nav-link">Execution</a>
+    <a routerLink="/users" routerLinkActive="active" class="nav-link">Users</a>
+  </div>
+</nav>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+<footer class="footer">
+  &copy; {{year}} OceanPro – Built with Angular — Ocean Professional UI
+</footer>
